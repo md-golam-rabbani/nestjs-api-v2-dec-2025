@@ -10,28 +10,32 @@ import {
 @Entity('users')
 export class User {
   @ObjectIdColumn()
-  _id: number;
+  _id: string;
 
-  @Column({ length: 25 })
+  @Column({ type: 'varchar', length: 255 })
   firstName: string;
 
   @IsOptional()
-  @Column({ nullable: true, length: 25 })
-  lastName: string;
+  @Column({ type: 'varchar', length: 25, nullable: true })
+  lastName?: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 25 })
+  @Column({ type: 'varchar', length: 25 })
   phone: string;
 
   @IsOptional()
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean = true;
 
-  @CreateDateColumn()
-  createdAt!: Date;
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updatedAt: Date;
 }

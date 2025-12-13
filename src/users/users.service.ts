@@ -1,5 +1,9 @@
 import { UsersRepository } from './users.repository';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -19,21 +23,42 @@ export class UsersService {
     return await this.usersRepository.create(createUserDto);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.usersRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.usersRepository.findById(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
+  async update(id: string, updateUserDto: Partial<UpdateUserDto>) {
+    const existingUser = await this.usersRepository.findById(id);
 
-    return `This action updates a #${id} user`;
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.usersRepository.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const existingUser = await this.usersRepository.findById(id);
+
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.usersRepository.remove(id);
+    return;
+  }
+
+  async updateStatus(id: string) {
+    const existingUser = await this.usersRepository.findById(id);
+
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.usersRepository.updateStatus(id);
   }
 }
