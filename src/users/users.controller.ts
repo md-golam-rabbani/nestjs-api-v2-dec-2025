@@ -8,27 +8,35 @@ import {
   Delete,
   ValidationPipe,
   NotFoundException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { User } from './entities/user.entity';
+import { ApiResponse } from '../common/interfaces/api-response.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+  ): Promise<User> {
     return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<User> {
     const user = await this.usersService.findOne(id);
 
     if (!user) {
@@ -39,20 +47,21 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: Partial<UpdateUserDto>,
-  ) {
-    return this.usersService.update(id, updateUserDto);
+  ): Promise<User | null> {
+    return await this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.usersService.remove(id);
   }
 
   @Patch('update-status/:id')
-  updateStatus(@Param('id') id: string) {
-    return this.usersService.updateStatus(id);
+  async updateStatus(@Param('id') id: string): Promise<User> {
+    return await this.usersService.updateStatus(id);
   }
 }

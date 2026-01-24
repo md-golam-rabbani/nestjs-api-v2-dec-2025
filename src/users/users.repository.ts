@@ -20,27 +20,32 @@ export class UsersRepository {
     return await this.repository.findOne({ where: { email } });
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.repository.find();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<User | null> {
     return await this.repository.findOne({ where: { _id: new ObjectId(id) } });
   }
 
-  async update(id: string, createUserDto: Partial<CreateUserDto>) {
-    return await this.repository.findOneAndUpdate(
+  async update(
+    id: string,
+    createUserDto: Partial<CreateUserDto>,
+  ): Promise<User | null> {
+    const result = await this.repository.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: createUserDto },
       { returnDocument: 'after' },
     );
+
+    return result as unknown as User | null;
   }
 
-  async remove(id: string) {
-    return await this.repository.deleteOne({ _id: new ObjectId(id) });
+  async remove(id: string): Promise<void> {
+    await this.repository.deleteOne({ _id: new ObjectId(id) });
   }
 
-  async updateStatus(id: string) {
+  async updateStatus(id: string): Promise<User> {
     const objectId = new ObjectId(id);
 
     const document = await this.findById(id);
@@ -57,6 +62,11 @@ export class UsersRepository {
       { $set: { isActive: newStatus } },
     );
 
-    return;
+    const updated = await this.findById(id);
+    if (!updated) {
+      throw new NotFoundException('User not found after update');
+    }
+
+    return updated;
   }
 }

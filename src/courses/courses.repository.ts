@@ -6,6 +6,20 @@ import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/request/create-course.dto';
 import { CourseListFilterDto } from './dto/request/course-list-filter.dto';
 
+/**
+ * MongoDB filter type for course queries
+ */
+type MongoFilter = {
+  title?: {
+    $regex: string;
+    $options?: string;
+  };
+  price?: {
+    $gte?: number;
+    $lte?: number;
+  };
+};
+
 @Injectable()
 export class CoursesRepository {
   constructor(
@@ -87,7 +101,7 @@ export class CoursesRepository {
     const limit = pageSize;
 
     // Build query filter
-    const filter: any = {};
+    const filter: MongoFilter = {};
 
     if (search) {
       filter.title = {

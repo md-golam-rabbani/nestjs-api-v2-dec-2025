@@ -6,12 +6,13 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.usersRepository.findByEmail(
       createUserDto.email,
     );
@@ -23,15 +24,15 @@ export class UsersService {
     return await this.usersRepository.create(createUserDto);
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.usersRepository.findAll();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<User | null> {
     return this.usersRepository.findById(id);
   }
 
-  async update(id: string, updateUserDto: Partial<UpdateUserDto>) {
+  async update(id: string, updateUserDto: Partial<UpdateUserDto>): Promise<User | null> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {
@@ -41,7 +42,7 @@ export class UsersService {
     return this.usersRepository.update(id, updateUserDto);
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {
@@ -49,10 +50,9 @@ export class UsersService {
     }
 
     await this.usersRepository.remove(id);
-    return;
   }
 
-  async updateStatus(id: string) {
+  async updateStatus(id: string): Promise<User> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {

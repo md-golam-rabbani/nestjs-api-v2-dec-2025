@@ -6,6 +6,20 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/request/create-product.dto';
 import { ProductListFilterDto } from './dto/request/product-list-filter.dto';
 
+/**
+ * MongoDB filter type for product queries
+ */
+type MongoFilter = {
+  name?: {
+    $regex: string;
+    $options?: string;
+  };
+  price?: {
+    $gte?: number;
+    $lte?: number;
+  };
+};
+
 @Injectable()
 export class ProductsRepository {
   constructor(
@@ -87,7 +101,7 @@ export class ProductsRepository {
     const limit = pageSize;
 
     // Build query filter
-    const filter: any = {};
+    const filter: MongoFilter = {};
 
     if (search) {
       filter.name = {
