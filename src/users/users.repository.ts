@@ -2,6 +2,7 @@ import { MongoRepository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 
@@ -68,5 +69,62 @@ export class UsersRepository {
     }
 
     return updated;
+  }
+
+  async findAllWithFilters(filterDto: UserListFilterDto): Promise<{
+    items: User[];
+    totalCount: number;
+    totalPages: number;
+    currentPage: number;
+  }> {
+    const {
+      search,
+      isActive,
+      pageNumber = 1,
+      pageSize = 10,
+    } = filterDto;
+
+    const skip = (pageNumber - 1) * pageSize;
+    const limit = pageSize;
+
+    // Build query filter
+    const filter: {
+      firstName?: { $regex: string; $options?: string };
+      lastName?: { $regex: string; $options?: string };
+      email?: { $regex: string; $options?: string };
+      isActive?: boolean;
+    } = {};
+
+    if (search) {
+      filter.firstName = {
+        $regex: search,
+        $options: 'i',
+      };
+    }
+
+    if (isActive !== undefined) {
+      filter.isActive = isActive;
+    }
+
+    // Get total count
+    const totalCount = await this.repository.count(filter);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // Get paginated data
+    const items = await this.repository.find({
+      where: filter,
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      items,
+      totalCount,
+      totalPages,
+      currentPage: pageNumber,
+    };
   }
 }

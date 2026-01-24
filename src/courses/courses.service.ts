@@ -74,7 +74,7 @@ export class CoursesService {
   ): Promise<CourseListResponseDto<CourseResponseDto>> {
     const result = await this.coursesRepository.findAllWithFilters(filterDto);
 
-    const data = result.data.map((course) =>
+    const items = result.items.map((course) =>
       instanceToPlain(course, { groups: ['response'] }),
     ) as CourseResponseDto[];
 
@@ -82,7 +82,7 @@ export class CoursesService {
       totalCount: result.totalCount,
       totalPages: result.totalPages,
       currentPage: result.currentPage,
-      data,
+      items,
     };
   }
 }

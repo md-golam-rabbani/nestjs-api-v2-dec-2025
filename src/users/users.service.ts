@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -63,5 +64,14 @@ export class UsersService {
     }
 
     return this.usersRepository.updateStatus(id);
+  }
+
+  async findAllWithFilters(filterDto: UserListFilterDto): Promise<{
+    items: User[];
+    totalCount: number;
+    totalPages: number;
+    currentPage: number;
+  }> {
+    return await this.usersRepository.findAllWithFilters(filterDto);
   }
 }

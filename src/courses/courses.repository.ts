@@ -84,7 +84,7 @@ export class CoursesRepository {
   }
 
   async findAllWithFilters(filterDto: CourseListFilterDto): Promise<{
-    data: Course[];
+    items: Course[];
     totalCount: number;
     totalPages: number;
     currentPage: number;
@@ -127,7 +127,7 @@ export class CoursesRepository {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     // Get paginated data
-    const data = await this.repository.find({
+    const items = await this.repository.find({
       where: filter,
       skip,
       take: limit,
@@ -135,7 +135,7 @@ export class CoursesRepository {
     });
 
     return {
-      data,
+      items,
       totalCount,
       totalPages,
       currentPage: pageNumber,

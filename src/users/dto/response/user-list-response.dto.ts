@@ -1,7 +1,7 @@
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class ProductListResponseDto<T> {
+export class UserListResponseDto<T> {
   @Expose()
   totalCount: number;
 

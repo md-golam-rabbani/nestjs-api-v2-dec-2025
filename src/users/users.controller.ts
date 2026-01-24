@@ -14,6 +14,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserListFilterDto } from './dto/request/user-list-filter.dto';
+import { UserListResponseDto } from './dto/response/user-list-response.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 import { ApiResponse } from '../common/interfaces/api-response.interface';
@@ -63,5 +65,12 @@ export class UsersController {
   @Patch('update-status/:id')
   async updateStatus(@Param('id') id: string): Promise<User> {
     return await this.usersService.updateStatus(id);
+  }
+
+  @Post('list')
+  async findAllWithFilters(
+    @Body(new ValidationPipe()) filterDto: UserListFilterDto,
+  ): Promise<UserListResponseDto<User>> {
+    return await this.usersService.findAllWithFilters(filterDto);
   }
 }
