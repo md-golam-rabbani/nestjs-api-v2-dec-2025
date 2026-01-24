@@ -1,7 +1,7 @@
 import { MongoRepository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/request/create-user.dto';
 import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
@@ -77,12 +77,7 @@ export class UsersRepository {
     totalPages: number;
     currentPage: number;
   }> {
-    const {
-      search,
-      isActive,
-      pageNumber = 1,
-      pageSize = 10,
-    } = filterDto;
+    const { search, isActive, pageNumber = 1, pageSize = 10 } = filterDto;
 
     const skip = (pageNumber - 1) * pageSize;
     const limit = pageSize;

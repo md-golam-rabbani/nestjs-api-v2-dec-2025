@@ -16,8 +16,6 @@ import { UpdateCourseDto } from './dto/request/update-course.dto';
 import { CourseListFilterDto } from './dto/request/course-list-filter.dto';
 import { CourseResponseDto } from './dto/response/course-response.dto';
 import { CourseListResponseDto } from './dto/response/course-list-response.dto';
-import { Course } from './entities/course.entity';
-import { ApiResponse } from '../common/interfaces/api-response.interface';
 
 @Controller('courses')
 export class CoursesController {
@@ -27,12 +25,12 @@ export class CoursesController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(new ValidationPipe()) createCourseDto: CreateCourseDto,
-  ): Promise<Course> {
+  ): Promise<CourseResponseDto> {
     return await this.coursesService.create(createCourseDto);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Course> {
+  async findOne(@Param('id') id: string): Promise<CourseResponseDto> {
     return await this.coursesService.findOne(id);
   }
 
@@ -40,7 +38,7 @@ export class CoursesController {
   async update(
     @Param('id') id: string,
     @Body(new ValidationPipe()) updateCourseDto: UpdateCourseDto,
-  ): Promise<Course> {
+  ): Promise<CourseResponseDto> {
     return await this.coursesService.update(id, updateCourseDto);
   }
 
@@ -52,14 +50,16 @@ export class CoursesController {
   }
 
   @Patch(':id/toggle-publish')
-  async togglePublishStatus(@Param('id') id: string): Promise<Course> {
+  async togglePublishStatus(
+    @Param('id') id: string,
+  ): Promise<CourseResponseDto> {
     return await this.coursesService.togglePublishStatus(id);
   }
 
   @Post('list')
   async findAllWithFilters(
     @Body(new ValidationPipe()) filterDto: CourseListFilterDto,
-  ): Promise<CourseListResponseDto<Course>> {
+  ): Promise<CourseListResponseDto<CourseResponseDto>> {
     return await this.coursesService.findAllWithFilters(filterDto);
   }
 }

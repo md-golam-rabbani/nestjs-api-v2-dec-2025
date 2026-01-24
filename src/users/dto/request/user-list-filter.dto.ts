@@ -1,5 +1,4 @@
 import {
-  IsNumber,
   IsOptional,
   IsString,
   IsInt,

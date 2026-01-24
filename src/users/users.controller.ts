@@ -12,13 +12,12 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/request/create-user.dto';
+import { UpdateUserDto } from './dto/request/update-user.dto';
 import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { UserListResponseDto } from './dto/response/user-list-response.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserResponseDto } from './dto/response/user-response.dto';
 import { User } from './entities/user.entity';
-import { ApiResponse } from '../common/interfaces/api-response.interface';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +27,7 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
-  ): Promise<User> {
+  ): Promise<UserResponseDto> {
     return await this.usersService.create(createUserDto);
   }
 
