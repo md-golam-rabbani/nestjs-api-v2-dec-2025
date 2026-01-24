@@ -40,10 +40,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = exception.message || 'An error occurred';
 
     // Handle validation errors
-    if (
-      typeof exceptionResponse === 'object' &&
-      exceptionResponse !== null
-    ) {
+    if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
       const responseObj = exceptionResponse as ExceptionResponseObject;
 
       // Handle class-validator errors

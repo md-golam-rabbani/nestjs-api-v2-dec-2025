@@ -32,7 +32,10 @@ export class UsersService {
     return this.usersRepository.findById(id);
   }
 
-  async update(id: string, updateUserDto: Partial<UpdateUserDto>): Promise<User | null> {
+  async update(
+    id: string,
+    updateUserDto: Partial<UpdateUserDto>,
+  ): Promise<User | null> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {

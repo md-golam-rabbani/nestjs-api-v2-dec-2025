@@ -13,7 +13,9 @@ export class CoursesService {
 
   async create(createCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
     const course = await this.coursesRepository.create(createCourseDto);
-    return instanceToPlain(course, { groups: ['response'] }) as CourseResponseDto;
+    return instanceToPlain(course, {
+      groups: ['response'],
+    }) as CourseResponseDto;
   }
 
   async findOne(id: string): Promise<CourseResponseDto> {
@@ -23,7 +25,9 @@ export class CoursesService {
       throw new NotFoundException('Course not found');
     }
 
-    return instanceToPlain(course, { groups: ['response'] }) as CourseResponseDto;
+    return instanceToPlain(course, {
+      groups: ['response'],
+    }) as CourseResponseDto;
   }
 
   async update(
@@ -37,7 +41,9 @@ export class CoursesService {
     }
 
     const course = await this.coursesRepository.update(id, updateCourseDto);
-    return instanceToPlain(course, { groups: ['response'] }) as CourseResponseDto;
+    return instanceToPlain(course, {
+      groups: ['response'],
+    }) as CourseResponseDto;
   }
 
   async remove(id: string): Promise<void> {
@@ -58,7 +64,9 @@ export class CoursesService {
     }
 
     const course = await this.coursesRepository.togglePublishStatus(id);
-    return instanceToPlain(course, { groups: ['response'] }) as CourseResponseDto;
+    return instanceToPlain(course, {
+      groups: ['response'],
+    }) as CourseResponseDto;
   }
 
   async findAllWithFilters(

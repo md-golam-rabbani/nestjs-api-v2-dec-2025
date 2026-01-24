@@ -25,7 +25,9 @@ export class CoursesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body(new ValidationPipe()) createCourseDto: CreateCourseDto): Promise<Course> {
+  async create(
+    @Body(new ValidationPipe()) createCourseDto: CreateCourseDto,
+  ): Promise<Course> {
     return await this.coursesService.create(createCourseDto);
   }
 

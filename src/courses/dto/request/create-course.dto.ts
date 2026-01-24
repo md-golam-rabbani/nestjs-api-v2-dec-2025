@@ -6,7 +6,6 @@ import {
   IsString,
   MaxLength,
   MinLength,
-  ArrayNotEmpty,
   IsBoolean,
 } from 'class-validator';
 

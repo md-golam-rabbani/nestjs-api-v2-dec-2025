@@ -1,4 +1,11 @@
-import { IsString, IsEmail, IsNotEmpty, IsOptional, MinLength, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  MinLength,
+  IsNumber,
+} from 'class-validator';
 
 /**
  * DTO for creating a test user

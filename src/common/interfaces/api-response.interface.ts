@@ -35,4 +35,6 @@ export interface PaginationResponse<T> {
 /**
  * Response type that wraps data in pagination format
  */
-export interface PaginatedApiResponse<T> extends ApiResponse<PaginationResponse<T>> {}
+export interface PaginatedApiResponse<T> extends ApiResponse<
+  PaginationResponse<T>
+> {}

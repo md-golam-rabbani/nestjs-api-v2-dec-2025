@@ -57,11 +57,20 @@ export function serializeMongoData<T>(data: T): T {
           } else {
             result[key] = value.toString('base64');
           }
-        } else if (typeof value === 'object' && value !== null && 'buffer' in value) {
+        } else if (
+          typeof value === 'object' &&
+          value !== null &&
+          'buffer' in value
+        ) {
           // Handle nested buffer structure
           const bufferValue = value as { buffer: { data: number[] } };
-          if (Array.isArray(bufferValue.buffer.data) && bufferValue.buffer.data.length === 12) {
-            result[key] = new ObjectId(Buffer.from(bufferValue.buffer.data)).toString();
+          if (
+            Array.isArray(bufferValue.buffer.data) &&
+            bufferValue.buffer.data.length === 12
+          ) {
+            result[key] = new ObjectId(
+              Buffer.from(bufferValue.buffer.data),
+            ).toString();
           } else {
             result[key] = JSON.stringify(value);
           }

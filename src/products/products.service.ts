@@ -11,9 +11,13 @@ import { ProductListResponseDto } from './dto/response/product-list-response.dto
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  async create(createProductDto: CreateProductDto): Promise<ProductResponseDto> {
+  async create(
+    createProductDto: CreateProductDto,
+  ): Promise<ProductResponseDto> {
     const product = await this.productsRepository.create(createProductDto);
-    return instanceToPlain(product, { groups: ['response'] }) as ProductResponseDto;
+    return instanceToPlain(product, {
+      groups: ['response'],
+    }) as ProductResponseDto;
   }
 
   async findOne(id: string): Promise<ProductResponseDto> {
@@ -23,7 +27,9 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    return instanceToPlain(product, { groups: ['response'] }) as ProductResponseDto;
+    return instanceToPlain(product, {
+      groups: ['response'],
+    }) as ProductResponseDto;
   }
 
   async update(
@@ -37,7 +43,9 @@ export class ProductsService {
     }
 
     const product = await this.productsRepository.update(id, updateProductDto);
-    return instanceToPlain(product, { groups: ['response'] }) as ProductResponseDto;
+    return instanceToPlain(product, {
+      groups: ['response'],
+    }) as ProductResponseDto;
   }
 
   async remove(id: string): Promise<void> {
@@ -58,7 +66,9 @@ export class ProductsService {
     }
 
     const product = await this.productsRepository.togglePublishStatus(id);
-    return instanceToPlain(product, { groups: ['response'] }) as ProductResponseDto;
+    return instanceToPlain(product, {
+      groups: ['response'],
+    }) as ProductResponseDto;
   }
 
   async findAllWithFilters(

@@ -25,7 +25,9 @@ export class ProductsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body(new ValidationPipe()) createProductDto: CreateProductDto): Promise<Product> {
+  async create(
+    @Body(new ValidationPipe()) createProductDto: CreateProductDto,
+  ): Promise<Product> {
     return await this.productsService.create(createProductDto);
   }
 
