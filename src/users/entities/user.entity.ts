@@ -1,10 +1,10 @@
 import { IsOptional } from 'class-validator';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
-  CreateDateColumn,
   Entity,
   ObjectIdColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('users')
@@ -29,13 +29,21 @@ export class User {
   @Column({ type: 'boolean', default: true })
   isActive: boolean = true;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
+  @Column({ type: 'timestamp' })
   updatedAt: Date;
+
+  @BeforeInsert()
+  setDatesBeforeInsert() {
+    const now = new Date();
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
+
+  @BeforeUpdate()
+  setDatesBeforeUpdate() {
+    this.updatedAt = new Date();
+  }
 }

@@ -4,7 +4,7 @@ import { Course } from '../../entities/course.entity';
 @Exclude()
 export class CourseResponseDto {
   @Expose()
-  @Transform(({ obj }: { obj: Course }) => obj._id?.toString())
+  // @Transform(({ obj }: { obj: Course }) => obj._id?.toString())
   _id: string;
 
   @Expose()
