@@ -16,8 +16,6 @@ import { UpdateProductDto } from './dto/request/update-product.dto';
 import { ProductListFilterDto } from './dto/request/product-list-filter.dto';
 import { ProductResponseDto } from './dto/response/product-response.dto';
 import { ProductListResponseDto } from './dto/response/product-list-response.dto';
-import { Product } from './entities/product.entity';
-import { ApiResponse } from '../common/interfaces/api-response.interface';
 
 @Controller('products')
 export class ProductsController {
@@ -27,12 +25,12 @@ export class ProductsController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(new ValidationPipe()) createProductDto: CreateProductDto,
-  ): Promise<Product> {
+  ): Promise<ProductResponseDto> {
     return await this.productsService.create(createProductDto);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Product> {
+  async findOne(@Param('id') id: string): Promise<ProductResponseDto> {
     return await this.productsService.findOne(id);
   }
 
@@ -40,7 +38,7 @@ export class ProductsController {
   async update(
     @Param('id') id: string,
     @Body(new ValidationPipe()) updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
+  ): Promise<ProductResponseDto> {
     return await this.productsService.update(id, updateProductDto);
   }
 
@@ -52,14 +50,16 @@ export class ProductsController {
   }
 
   @Patch(':id/toggle-publish')
-  async togglePublishStatus(@Param('id') id: string): Promise<Product> {
+  async togglePublishStatus(
+    @Param('id') id: string,
+  ): Promise<ProductResponseDto> {
     return await this.productsService.togglePublishStatus(id);
   }
 
   @Post('list')
   async findAllWithFilters(
     @Body(new ValidationPipe()) filterDto: ProductListFilterDto,
-  ): Promise<ProductListResponseDto<Product>> {
+  ): Promise<ProductListResponseDto<ProductResponseDto>> {
     return await this.productsService.findAllWithFilters(filterDto);
   }
 }
