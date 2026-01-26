@@ -74,15 +74,16 @@ export class CoursesService {
   ): Promise<CourseListResponseDto<CourseResponseDto>> {
     const result = await this.coursesRepository.findAllWithFilters(filterDto);
 
-    const items = result.items.map((course) =>
+    const content = result.content.map((course) =>
       instanceToPlain(course, { groups: ['response'] }),
     ) as CourseResponseDto[];
 
     return {
-      totalCount: result.totalCount,
+      pageNumber: result.pageNumber,
+      pageSize: result.pageSize,
       totalPages: result.totalPages,
-      currentPage: result.currentPage,
-      items,
+      totalElements: result.totalElements,
+      content,
     };
   }
 }

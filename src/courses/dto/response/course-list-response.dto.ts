@@ -3,14 +3,17 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class CourseListResponseDto<T> {
   @Expose()
-  totalCount: number;
+  pageNumber: number;
+
+  @Expose()
+  pageSize: number;
 
   @Expose()
   totalPages: number;
 
   @Expose()
-  currentPage: number;
+  totalElements: number;
 
   @Expose()
-  items: T[];
+  content: T[];
 }

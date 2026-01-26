@@ -72,10 +72,11 @@ export class UsersRepository {
   }
 
   async findAllWithFilters(filterDto: UserListFilterDto): Promise<{
-    items: User[];
-    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
     totalPages: number;
-    currentPage: number;
+    totalElements: number;
+    content: User[];
   }> {
     const { search, isActive, pageNumber = 1, pageSize = 10 } = filterDto;
 
@@ -102,13 +103,13 @@ export class UsersRepository {
     }
 
     // Get total count
-    const totalCount = await this.repository.count(filter);
+    const totalElements = await this.repository.count(filter);
 
     // Calculate total pages
-    const totalPages = Math.ceil(totalCount / pageSize);
+    const totalPages = Math.ceil(totalElements / pageSize);
 
     // Get paginated data
-    const items = await this.repository.find({
+    const content = await this.repository.find({
       where: filter,
       skip,
       take: limit,
@@ -116,10 +117,11 @@ export class UsersRepository {
     });
 
     return {
-      items,
-      totalCount,
+      pageNumber,
+      pageSize,
       totalPages,
-      currentPage: pageNumber,
+      totalElements,
+      content,
     };
   }
 }

@@ -76,15 +76,16 @@ export class ProductsService {
   ): Promise<ProductListResponseDto<ProductResponseDto>> {
     const result = await this.productsRepository.findAllWithFilters(filterDto);
 
-    const items = result.items.map((product) =>
+    const content = result.content.map((product) =>
       instanceToPlain(product, { groups: ['response'] }),
     ) as ProductResponseDto[];
 
     return {
-      totalCount: result.totalCount,
+      pageNumber: result.pageNumber,
+      pageSize: result.pageSize,
       totalPages: result.totalPages,
-      currentPage: result.currentPage,
-      items,
+      totalElements: result.totalElements,
+      content,
     };
   }
 }

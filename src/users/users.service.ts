@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/request/update-user.dto';
 import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { User } from './entities/user.entity';
 import { UserResponseDto } from './dto/response/user-response.dto';
+import { UserListResponseDto } from './dto/response/user-list-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -67,12 +68,17 @@ export class UsersService {
     return this.usersRepository.updateStatus(id);
   }
 
-  async findAllWithFilters(filterDto: UserListFilterDto): Promise<{
-    items: User[];
-    totalCount: number;
-    totalPages: number;
-    currentPage: number;
-  }> {
-    return await this.usersRepository.findAllWithFilters(filterDto);
+  async findAllWithFilters(
+    filterDto: UserListFilterDto,
+  ): Promise<UserListResponseDto<User>> {
+    const result = await this.usersRepository.findAllWithFilters(filterDto);
+
+    return {
+      pageNumber: result.pageNumber,
+      pageSize: result.pageSize,
+      totalPages: result.totalPages,
+      totalElements: result.totalElements,
+      content: result.content,
+    };
   }
 }
