@@ -23,7 +23,7 @@ import { User } from './entities/user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('/create')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
@@ -47,7 +47,7 @@ export class UsersController {
     return user;
   }
 
-  @Patch(':id')
+  @Patch(':id/update')
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: Partial<UpdateUserDto>,
@@ -55,13 +55,13 @@ export class UsersController {
     return await this.usersService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete(':id/delete')
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string): Promise<void> {
     await this.usersService.remove(id);
   }
 
-  @Patch('update-status/:id')
+  @Patch(':id/update-status')
   async updateStatus(@Param('id') id: string): Promise<User> {
     return await this.usersService.updateStatus(id);
   }
