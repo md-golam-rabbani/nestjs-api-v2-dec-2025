@@ -24,9 +24,9 @@ export class CreateUserDto {
   @MaxLength(100, { message: 'Email  must be at most 100 characters long' })
   email: string;
 
-  @MinLength(3, { message: 'Phone  must be at least 3 characters long' })
+  @IsOptional()
   @MaxLength(25, { message: 'Phone  must be at most 25 characters long' })
-  phone: string;
+  phone?: string;
 
   @IsBoolean()
   @IsOptional()
