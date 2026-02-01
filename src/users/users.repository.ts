@@ -78,7 +78,7 @@ export class UsersRepository {
     totalElements: number;
     content: User[];
   }> {
-    const { search, isActive, pageNumber = 1, pageSize = 10 } = filterDto;
+    const { email, phone, isActive, pageNumber = 1, pageSize = 10 } = filterDto;
 
     const skip = (pageNumber - 1) * pageSize;
     const limit = pageSize;
@@ -88,12 +88,20 @@ export class UsersRepository {
       firstName?: { $regex: string; $options?: string };
       lastName?: { $regex: string; $options?: string };
       email?: { $regex: string; $options?: string };
+      phone?: { $regex: string; $options?: string };
       isActive?: boolean;
     } = {};
 
-    if (search) {
-      filter.firstName = {
-        $regex: search,
+    if (email) {
+      filter.email = {
+        $regex: email,
+        $options: 'i',
+      };
+    }
+
+    if (phone) {
+      filter.phone = {
+        $regex: phone,
         $options: 'i',
       };
     }

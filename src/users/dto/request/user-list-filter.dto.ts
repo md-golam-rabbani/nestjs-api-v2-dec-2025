@@ -23,7 +23,11 @@ export class UserListFilterDto {
 
   @IsOptional()
   @IsString()
-  search?: string;
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
 
   @IsOptional()
   @Type(() => Boolean)
