@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ValidationPipe,
-  NotFoundException,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -17,13 +16,12 @@ import { UpdateUserDto } from './dto/request/update-user.dto';
 import { UserListFilterDto } from './dto/request/user-list-filter.dto';
 import { UserListResponseDto } from './dto/response/user-list-response.dto';
 import { UserResponseDto } from './dto/response/user-response.dto';
-import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('/create')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
@@ -31,45 +29,34 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
-  }
-
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User> {
-    const user = await this.usersService.findOne(id);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
+  async findOne(@Param('id') id: string): Promise<UserResponseDto> {
+    return await this.usersService.findOne(id);
   }
 
-  @Patch(':id/update')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateUserDto: Partial<UpdateUserDto>,
-  ): Promise<User | null> {
+    @Body(new ValidationPipe()) updateUserDto: Partial<UpdateUserDto>,
+  ): Promise<UserResponseDto> {
     return await this.usersService.update(id, updateUserDto);
   }
 
-  @Delete(':id/delete')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string): Promise<void> {
     await this.usersService.remove(id);
   }
 
-  @Patch(':id/update-status')
-  async updateStatus(@Param('id') id: string): Promise<User> {
+  @Patch(':id/status')
+  async updateStatus(@Param('id') id: string): Promise<UserResponseDto> {
     return await this.usersService.updateStatus(id);
   }
 
   @Post('list')
   async findAllWithFilters(
     @Body(new ValidationPipe()) filterDto: UserListFilterDto,
-  ): Promise<UserListResponseDto<User>> {
+  ): Promise<UserListResponseDto<UserResponseDto>> {
     return await this.usersService.findAllWithFilters(filterDto);
   }
 }

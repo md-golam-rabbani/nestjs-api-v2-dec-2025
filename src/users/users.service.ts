@@ -7,9 +7,9 @@ import {
 import { CreateUserDto } from './dto/request/create-user.dto';
 import { UpdateUserDto } from './dto/request/update-user.dto';
 import { UserListFilterDto } from './dto/request/user-list-filter.dto';
-import { User } from './entities/user.entity';
 import { UserResponseDto } from './dto/response/user-response.dto';
 import { UserListResponseDto } from './dto/response/user-list-response.dto';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -24,28 +24,38 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    return await this.usersRepository.create(createUserDto);
+    const user = await this.usersRepository.create(createUserDto);
+    return instanceToPlain(user, {
+      groups: ['response'],
+    }) as UserResponseDto;
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.findAll();
-  }
+  async findOne(id: string): Promise<UserResponseDto> {
+    const user = await this.usersRepository.findById(id);
 
-  async findOne(id: string): Promise<User | null> {
-    return this.usersRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return instanceToPlain(user, {
+      groups: ['response'],
+    }) as UserResponseDto;
   }
 
   async update(
     id: string,
     updateUserDto: Partial<UpdateUserDto>,
-  ): Promise<User | null> {
+  ): Promise<UserResponseDto> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
 
-    return this.usersRepository.update(id, updateUserDto);
+    const user = this.usersRepository.update(id, updateUserDto);
+    return instanceToPlain(user, {
+      groups: ['response'],
+    }) as UserResponseDto;
   }
 
   async remove(id: string): Promise<void> {
@@ -58,27 +68,34 @@ export class UsersService {
     await this.usersRepository.remove(id);
   }
 
-  async updateStatus(id: string): Promise<User> {
+  async updateStatus(id: string): Promise<UserResponseDto> {
     const existingUser = await this.usersRepository.findById(id);
 
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
 
-    return this.usersRepository.updateStatus(id);
+    const user = this.usersRepository.updateStatus(id);
+    return instanceToPlain(user, {
+      groups: ['response'],
+    }) as UserResponseDto;
   }
 
   async findAllWithFilters(
     filterDto: UserListFilterDto,
-  ): Promise<UserListResponseDto<User>> {
+  ): Promise<UserListResponseDto<UserResponseDto>> {
     const result = await this.usersRepository.findAllWithFilters(filterDto);
+
+    const content = result.content.map((user) =>
+      instanceToPlain(user, { groups: ['response'] }),
+    ) as UserResponseDto[];
 
     return {
       pageNumber: result.pageNumber,
       pageSize: result.pageSize,
       totalPages: result.totalPages,
       totalElements: result.totalElements,
-      content: result.content,
+      content,
     };
   }
 }
