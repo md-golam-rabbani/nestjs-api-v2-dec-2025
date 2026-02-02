@@ -91,7 +91,7 @@ export class CoursesRepository {
     content: Course[];
   }> {
     const {
-      search,
+      title,
       minPrice,
       maxPrice,
       pageNumber = 1,
@@ -104,9 +104,9 @@ export class CoursesRepository {
     // Build query filter
     const filter: MongoFilter = {};
 
-    if (search) {
+    if (title) {
       filter.title = {
-        $regex: search,
+        $regex: title,
         $options: 'i',
       };
     }

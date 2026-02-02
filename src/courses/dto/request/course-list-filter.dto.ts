@@ -23,7 +23,7 @@ export class CourseListFilterDto {
 
   @IsOptional()
   @IsString()
-  search?: string;
+  title?: string;
 
   @IsOptional()
   @Type(() => Number)
